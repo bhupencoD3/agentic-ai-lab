@@ -1,0 +1,18 @@
+name: agenticai_env
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.12
+  - pip
+  - pip:
+      - langchain
+      - langgraph
+      - langchain-core
+      - langchain-community
+      - ipykernel
+      - python-dotenv
+      - langchain-openai
+      - langchain-groq
+      - arxiv
+      - wikipedia
