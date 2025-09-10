@@ -16,3 +16,7 @@ dependencies:
       - langchain-groq
       - arxiv
       - wikipedia
+      - langgraph-cli[inmem]
+      - faiss-cpu
+      - sentence-transformers
+      - arxiv
