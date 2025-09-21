@@ -1,0 +1,18 @@
+Legal & Policy Documents of TechNova Solutions Pvt. Ltd.
+Company Background
+TechNova Solutions Pvt. Ltd. (“TechNova”, “the Company”, “we”, “our” or “us”) is a technology services provider incorporated under the Companies Act, 2013, in India. Our principal office is located at Plot No. 42, Sector 18, Electronic City, Bengaluru, Karnataka – 560100. The Company specializes in artificial intelligence services, cloud consulting, enterprise software solutions, and managed IT operations.
+This document collection is intended for employees, customers, vendors, contractors, and any third-party service providers associated with TechNova Solutions Pvt. Ltd. The information contained herein covers our contractual obligations, compliance requirements, data privacy commitments, intellectual property protections, and dispute resolution frameworks.
+Terms of Service
+By accessing or using any services offered by TechNova, users agree to be bound by these Terms of Service. Services may include, but are not limited to, cloud hosting, AI model deployment, API access, software licensing, and consulting engagements.
+Eligibility: Users must be at least 18 years of age to use TechNova’s services.
+License Grant: TechNova grants a non-exclusive, non-transferable license to use its software products, subject to payment and compliance with licensing conditions.
+Service Restrictions: Users agree not to reverse engineer, decompile, or resell TechNova’s proprietary software. Any attempt to bypass system security or exploit vulnerabilities will result in immediate suspension of services and potential legal action.
+Termination: TechNova reserves the right to terminate or suspend accounts at its sole discretion, without prior notice, if users violate these terms.
+Limitation of Liability: Under no circumstances shall TechNova be liable for indirect, incidental, special, or consequential damages arising from the use of its services.
+Privacy Policy
+At TechNova, we value the privacy of our clients and users. This Privacy Policy outlines how we collect, use, disclose, and safeguard personal information.
+Data Collection: We may collect personal information such as name, email address, company affiliation, IP address, billing details, and device information when users interact with our website, services, or support channels.
+Data Usage: Information is used for service delivery, personalization, billing, security monitoring, research, and customer support.
+Third-Party Sharing: TechNova may share data with trusted vendors and partners strictly for business operations. No personal information is sold to third parties.
+Data Security: The Company employs industry-standard encryption, multi-factor authentication, and access control policies. However, users acknowledge that no data transmission method over the internet is 100% secure.
+User Rights: Users have the right to request data access, correction, or deletion, subject to applicable laws. Requests should be emailed to compliance@technova.com
