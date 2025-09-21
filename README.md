@@ -24,11 +24,15 @@ Each notebook explores a narrowly scoped question about agent design: representa
 
 3-Debugging/
 ├── openai_agent.py
+
+4-Workflows/
+├── 1-ReAct.ipynb
 ```
 
 * `1-LangGraph_Basics/` → introductory and progressively advanced experiments with LangGraph and its integration with LangChain.
 * `2-LanggraphAdvance/` → advanced streaming and asynchronous execution examples.
 * `3-Debugging/` → reusable agent scripts and tool-augmented graph definitions.
+* `4-Workflows/` → practical workflows demonstrating RAG-enabled ReAct agents with multiple tools.
 * `environment.yml` → conda environment file for reproducing the experiments.
 
 ---
@@ -100,7 +104,7 @@ class State(BaseModel):
 
   * Node `llm_tool` handles tool-augmented LLM responses.
   * Conditional edges (`tools_condition`) route execution to tool nodes when appropriate.
-* **Insight:** This notebook demonstrates **tool-augmented reasoning** within LangGraph, a step toward agentic systems capable of **planning + acting** workflows.
+* **Insight:** Demonstrates **tool-augmented reasoning** within LangGraph, a step toward agentic systems capable of **planning + acting** workflows.
 
 ---
 
@@ -112,7 +116,7 @@ Demonstrates the extension of a chatbot with **multiple external tools**:
 * **Wikipedia** for encyclopedic knowledge.
 * **Tavily** for up-to-date web search.
 
-The notebook shows how to bind tools to an LLM (`ChatGroq`) and incorporate them into a **LangGraph pipeline**. Tool invocation is handled dynamically based on user queries, with examples ranging from AI research retrieval to current news and biographical queries. This represents a concrete step toward **tool-augmented agents**.
+The notebook shows how to bind tools to an LLM (`ChatGroq`) and incorporate them into a **LangGraph pipeline**. Tool invocation is handled dynamically based on user queries. Represents a concrete step toward **tool-augmented agents**.
 
 ---
 
@@ -121,16 +125,32 @@ The notebook shows how to bind tools to an LLM (`ChatGroq`) and incorporate them
 Implements the **ReAct (Reasoning + Acting)** paradigm within LangGraph. Key features include:
 
 * Combination of reasoning steps with external tool calls.
-* Use of multiple utilities: Arxiv, Wikipedia, Tavily search, and custom mathematical functions (`add`, `sub`, `multi`, `divide`).
+* Use of multiple utilities: Arxiv, Wikipedia, Tavily search, and custom math functions (`add`, `sub`, `multi`, `divide`).
 * Integration with **OpenAI models** (`gpt-4o-mini`) for reasoning-driven workflows.
 * Construction of a tool-enabled agent graph with recursive tool use.
 * Introduction of **MemorySaver**, enabling stateful agents that maintain conversational context across interactions.
 
-The notebook demonstrates advanced scenarios where the agent reasons over multi-step tasks (e.g., searching news, performing arithmetic operations, and chaining results). It also highlights the role of persistent memory via checkpoints and configurable threads for multi-turn, state-aware conversations.
+The notebook demonstrates advanced scenarios where the agent reasons over multi-step tasks (e.g., searching news, performing arithmetic, and chaining results). Highlights the role of persistent memory via checkpoints for multi-turn, state-aware conversations.
 
 ---
 
-### 8. Streaming Responses (`2-LanggraphAdvance/1-streaming.ipynb`)
+### 8. ReAct RAG Workflow (`4-Workflows/1-ReAct.ipynb`)
+
+* Implements a **RAG-enabled ReAct agent** combining reasoning and acting with document retrieval.
+* Integrates tools:
+
+  * **Wikipedia** via `WikipediaQueryRun`.
+  * **Arxiv** for academic papers.
+  * **Internal tech docs and research notes** via FAISS retrievers.
+* Uses **OpenAI embeddings** for semantic search.
+* **State:** maintained as a sequence of `BaseMessage` objects, enabling conversational context.
+* **Graph Construction:** uses `StateGraph` to structure multi-tool workflows.
+* **Example Query:** `"what does research says about 'Ethical and Societal Considerations'?"`
+* **Insight:** Demonstrates **tool-augmented retrieval + reasoning**, enabling agents to answer questions grounded in external and internal knowledge bases.
+
+---
+
+### 9. Streaming Responses (`2-LanggraphAdvance/1-streaming.ipynb`)
 
 * Demonstrates **streaming and asynchronous responses** using LangGraph.
 * **State:** `TypedDict` with annotated `messages` field and `add_messages` handler.
@@ -138,39 +158,28 @@ The notebook demonstrates advanced scenarios where the agent reasons over multi-
 * **Memory:** `MemorySaver` checkpointer for state persistence.
 * **Execution:**
 
-  * `graph_builder.stream()` streams responses in real-time using `updates` or `values` mode.
-  * `graph_builder.astream_events()` asynchronously streams events, demonstrating `async` capabilities.
-* **Insight:** Illustrates **real-time interaction** and **threaded conversational context**, essential for responsive multi-turn agents.
+  * `graph_builder.stream()` streams responses in real-time.
+  * `graph_builder.astream_events()` asynchronously streams events.
+* **Insight:** Illustrates **real-time interaction** and **threaded conversational context**.
 
 ---
 
-### 9. OpenAI Agent Script (`3-Debugging/openai_agent.py`)
+### 10. OpenAI Agent Script (`3-Debugging/openai_agent.py`)
 
 * Provides reusable **agent graph scripts** for experimentation.
-
 * **State:** `TypedDict` with annotated `messages` field using `BaseMessage`.
-
 * **LLM Integration:** OpenAI GPT-4o-mini (`ChatOpenAI`) with optional temperature control.
-
 * **Graphs:**
 
   * `make_default_graph()` – basic graph with a single LLM node.
   * `make_alternate_graph()` – graph with tool augmentation and conditional routing.
-
-* **Tools:** Uses `ToolNode` and `@tool` decorators for tool-augmented reasoning (e.g., `add(a, b)`).
-
-* **Execution Flow:**
-
-  * Conditional edges check for `tool_calls` to determine workflow continuation.
-  * Compiled graphs allow easy reuse of agent workflows.
-
-* **Insight:** Shows how to modularize **agent definitions**, integrate tools, and dynamically route execution, enabling **scalable experimentation**.
+* **Tools:** Uses `ToolNode` and `@tool` decorators.
+* **Execution Flow:** conditional edges check for `tool_calls`.
+* **Insight:** Modularizes agent definitions, integrates tools, and enables scalable experimentation.
 
 ---
 
 ## Broader Research Trajectory
-
-Across these notebooks and scripts, several foundational themes emerge:
 
 1. **Control Flow:** deterministic vs stochastic routing.
 2. **Representation:** schema choices (`TypedDict`, `dataclass`, `pydantic`) shape rigor and maintainability.
