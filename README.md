@@ -27,12 +27,16 @@ Each notebook explores a narrowly scoped question about agent design: representa
 
 4-Workflows/
 ├── 1-ReAct.ipynb
+
+5-RAGs/
+├── 1-AgenticRAG.ipynb
 ```
 
 * `1-LangGraph_Basics/` → introductory and progressively advanced experiments with LangGraph and its integration with LangChain.
 * `2-LanggraphAdvance/` → advanced streaming and asynchronous execution examples.
 * `3-Debugging/` → reusable agent scripts and tool-augmented graph definitions.
 * `4-Workflows/` → practical workflows demonstrating RAG-enabled ReAct agents with multiple tools.
+* `5-RAGs/` → experiments with agentic RAG workflows using multiple retrievers and LangGraph.
 * `environment.yml` → conda environment file for reproducing the experiments.
 
 ---
@@ -75,7 +79,7 @@ Each notebook explores a narrowly scoped question about agent design: representa
 ### 4. Pydantic State Validation (`4-pydantic.ipynb`)
 
 * Introduces **Pydantic models** for stricter runtime validation.
-* **State:** defined as a `BaseModel`:
+* **State:** defined as a `BaseModel`.
 
 ```python
 class State(BaseModel):
@@ -116,7 +120,7 @@ Demonstrates the extension of a chatbot with **multiple external tools**:
 * **Wikipedia** for encyclopedic knowledge.
 * **Tavily** for up-to-date web search.
 
-The notebook shows how to bind tools to an LLM (`ChatGroq`) and incorporate them into a **LangGraph pipeline**. Tool invocation is handled dynamically based on user queries. Represents a concrete step toward **tool-augmented agents**.
+Shows how to bind tools to an LLM (`ChatGroq`) and incorporate them into a **LangGraph pipeline**, handling tool invocation dynamically. Represents a concrete step toward **tool-augmented agents**.
 
 ---
 
@@ -125,12 +129,11 @@ The notebook shows how to bind tools to an LLM (`ChatGroq`) and incorporate them
 Implements the **ReAct (Reasoning + Acting)** paradigm within LangGraph. Key features include:
 
 * Combination of reasoning steps with external tool calls.
-* Use of multiple utilities: Arxiv, Wikipedia, Tavily search, and custom math functions (`add`, `sub`, `multi`, `divide`).
+* Uses multiple utilities: Arxiv, Wikipedia, Tavily search, and custom math functions (`add`, `sub`, `multi`, `divide`).
 * Integration with **OpenAI models** (`gpt-4o-mini`) for reasoning-driven workflows.
 * Construction of a tool-enabled agent graph with recursive tool use.
 * Introduction of **MemorySaver**, enabling stateful agents that maintain conversational context across interactions.
-
-The notebook demonstrates advanced scenarios where the agent reasons over multi-step tasks (e.g., searching news, performing arithmetic, and chaining results). Highlights the role of persistent memory via checkpoints for multi-turn, state-aware conversations.
+* Demonstrates multi-step reasoning workflows and persistent memory via checkpoints.
 
 ---
 
@@ -143,14 +146,34 @@ The notebook demonstrates advanced scenarios where the agent reasons over multi-
   * **Arxiv** for academic papers.
   * **Internal tech docs and research notes** via FAISS retrievers.
 * Uses **OpenAI embeddings** for semantic search.
-* **State:** maintained as a sequence of `BaseMessage` objects, enabling conversational context.
-* **Graph Construction:** uses `StateGraph` to structure multi-tool workflows.
-* **Example Query:** `"what does research says about 'Ethical and Societal Considerations'?"`
-* **Insight:** Demonstrates **tool-augmented retrieval + reasoning**, enabling agents to answer questions grounded in external and internal knowledge bases.
+* **State:** sequence of `BaseMessage` objects for conversational context.
+* **Graph Construction:** `StateGraph` structures multi-tool workflows.
+* **Insight:** Demonstrates **tool-augmented retrieval + reasoning**, enabling agents to answer questions grounded in multiple knowledge bases.
 
 ---
 
-### 9. Streaming Responses (`2-LanggraphAdvance/1-streaming.ipynb`)
+### 9. Agentic RAG Experiment (`5-RAGs/1-AgenticRAG.ipynb`)
+
+* Implements **agentic RAG** using multiple retrievers (LangGraph + LangChain) and Groq LLM (`ChatGroq`).
+* **Environment:** loads `.env` for `OPENAI_API_KEY` and `GROQ_API_KEY`.
+* **Retrievers:**
+
+  * FAISS-based vector stores built from LangGraph and LangChain tutorials.
+  * Tools created via `create_retriever_tool`.
+* **Agent Workflow:**
+
+  * `agent()` → LLM with tool bindings.
+  * `grade_documents()` → evaluates relevance of retrieved docs.
+  * `generate()` → generates answers from relevant docs.
+  * `rewrite()` → reformulates queries if docs not relevant.
+* **State:** `AgentState` (TypedDict with `messages` annotated).
+* **Graph Construction:** `StateGraph` compiles nodes and conditional edges for tool-enabled agentic reasoning.
+* **Visualization:** displays graph using `graph.get_graph(xray=True).draw_mermaid_png()`.
+* **Insight:** Demonstrates end-to-end RAG agent capable of **retrieval, reasoning, query refinement, and multi-tool orchestration**.
+
+---
+
+### 10. Streaming Responses (`2-LanggraphAdvance/1-streaming.ipynb`)
 
 * Demonstrates **streaming and asynchronous responses** using LangGraph.
 * **State:** `TypedDict` with annotated `messages` field and `add_messages` handler.
@@ -164,7 +187,7 @@ The notebook demonstrates advanced scenarios where the agent reasons over multi-
 
 ---
 
-### 10. OpenAI Agent Script (`3-Debugging/openai_agent.py`)
+### 11. OpenAI Agent Script (`3-Debugging/openai_agent.py`)
 
 * Provides reusable **agent graph scripts** for experimentation.
 * **State:** `TypedDict` with annotated `messages` field using `BaseMessage`.
