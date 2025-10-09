@@ -8,29 +8,32 @@
 
   ## Repository Structure
 
-  ```
-  1-LangGraph_Basics/
-  │
-  ├── 1-simple_graph.ipynb
-  ├── 2-chatbot.ipynb
-  ├── 3-DataClasses_StateSchema.ipynb
-  ├── 4-pydantic.ipynb
-  ├── 5-ChainsLangGraph.ipynb
-  ├── 6-Chatbot_multiple_tools.ipynb
-  └── 7-ReActAgents.ipynb
+```
+1-LangGraph_Basics/
+│
+├── 1-simple_graph.ipynb
+├── 2-chatbot.ipynb
+├── 3-DataClasses_StateSchema.ipynb
+├── 4-pydantic.ipynb
+├── 5-ChainsLangGraph.ipynb
+├── 6-Chatbot_multiple_tools.ipynb
+└── 7-ReActAgents.ipynb
 
-  2-LanggraphAdvance/
-  ├── 1-streaming.ipynb
+2-LanggraphAdvance/
+├── 1-streaming.ipynb
 
-  3-Debugging/
-  ├── openai_agent.py
+3-Debugging/
+├── openai_agent.py
 
-  4-Workflows/
-  ├── 1-ReAct.ipynb
+4-Workflows/
+├── 1-ReAct.ipynb
 
-  5-RAGs/
-  ├── 1-AgenticRAG.ipynb
-  ```
+5-RAGs/
+├── 1-AgenticRAG.ipynb
+├── 2-CoTRAG.ipynb
+├── 3-SelfReflection.ipynb
+└── 4-QueryPlanningdecomposition.ipynb
+```
 
   * `1-LangGraph_Basics/` → introductory and progressively advanced experiments with LangGraph and its integration with LangChain.
   * `2-LanggraphAdvance/` → advanced streaming and asynchronous execution examples.
@@ -214,7 +217,67 @@
 * **Insight:** Demonstrates **structured multi-step reasoning with retrieval**, combining LangGraph orchestration and document-grounded LLM reasoning.
 
   ---
-  
+
+### 13. Self-Reflective RAG Agent (`5-RAGs/3-SelfReflection.ipynb`)
+
+Implements a **RAG agent with reflective reasoning**, where the model critiques and improves its own answers in iterative loops.
+This experiment studies *self-evaluation* and *revised answer generation* within the LangGraph framework.
+
+* **State:** `RAGReflectionState` (`pydantic.BaseModel`)
+
+  * `question` – input query
+  * `retrieved_docs` – retrieved chunks from FAISS store
+  * `answer` – generated answer
+  * `reflection` – model’s evaluation feedback
+  * `revised` – boolean flag to trigger re-generation
+  * `attempts` – number of iterations attempted
+
+* **Graph Nodes:**
+
+  * `retriever` → retrieves documents via FAISS.
+  * `responder` → generates an answer using the Groq `gemma2-9b-it` model.
+  * `reflector` → evaluates the answer and decides whether to revise.
+  * `done` → terminates when the answer passes reflection or exceeds 2 attempts.
+
+* **Workflow Logic:**
+
+  1. Retrieve docs relevant to the question.
+  2. Generate an answer.
+  3. Reflect on correctness and completeness.
+  4. If reflection says “NO,” the graph loops back for another iteration.
+
+* **Insight:**
+  Demonstrates **autonomous self-correction** — the RAG agent uses reflection to iteratively refine its output, approximating *metacognition* in LLM workflows.
+
+---
+
+### 14. Query Planning and Decomposition RAG (`5-RAGs/4-QueryPlanningdecomposition.ipynb`)
+
+Implements a **Query Planning**–based RAG workflow that decomposes complex questions into simpler sub-queries before retrieval and synthesis.
+
+* **State:** `RAGState` (`pydantic.BaseModel`)
+
+  * `question` – original complex question
+  * `sub_question` – list of decomposed sub-queries
+  * `retrieved_docs` – documents gathered per sub-question
+  * `answer` – final synthesized answer
+
+* **Graph Nodes:**
+
+  * `planner` → breaks complex queries into 2–3 sub-questions using LLM reasoning.
+  * `retriever` → retrieves supporting documents for each sub-question.
+  * `responder` → generates a unified final answer using retrieved context.
+
+* **Retrievers:**
+
+  * Documents fetched dynamically from URLs such as Lilian Weng’s AI blog posts.
+  * Embedded using `OpenAIEmbeddings(model='text-embedding-3-small')` and indexed with FAISS.
+
+* **Insight:**
+  This notebook explores **decompositional reasoning**, enabling the agent to answer broad or multi-faceted questions by planning, retrieving, and integrating multiple reasoning chains — key to building **multi-hop reasoning agents**.
+
+  __
+
   ## Broader Research Trajectory
 
   1. **Control Flow:** deterministic vs stochastic routing.
