@@ -32,7 +32,9 @@
 ├── 1-AgenticRAG.ipynb
 ├── 2-CoTRAG.ipynb
 ├── 3-SelfReflection.ipynb
-└── 4-QueryPlanningdecomposition.ipynb
+├── 4-QueryPlanningdecomposition.ipynb
+├── 5-IterativeRetrieval.ipynb
+└── 6-AnswerSynthesis.ipynb
 ```
 
   * `1-LangGraph_Basics/` → introductory and progressively advanced experiments with LangGraph and its integration with LangChain.
@@ -277,6 +279,46 @@ Implements a **Query Planning**–based RAG workflow that decomposes complex que
   This notebook explores **decompositional reasoning**, enabling the agent to answer broad or multi-faceted questions by planning, retrieving, and integrating multiple reasoning chains — key to building **multi-hop reasoning agents**.
 
   __
+
+
+### 15. Iterative Retrieval RAG (`5-RAGs/5-IterativeRetrieval.ipynb`)
+
+Implements an **iterative retrieval–generation–reflection loop**, where the agent continuously improves its query and answer quality through self-evaluation.
+
+* **State:** `IterativeRAGState` (`pydantic.BaseModel`)
+
+  * `question`, `refined_question`, `retrieved_docs`, `answer`, `verified`, `attempt`
+* **Nodes:**
+
+  * `retrieve_docs` → fetches context via retriever.
+  * `generate_answer` → generates initial answer using Groq `gemma2-9b-it`.
+  * `reflect_on_answer` → checks if the answer is sufficient.
+  * `refine_query` → reformulates the query if reflection says answer is incomplete.
+* **Flow:** `retrieve → answer → reflect → refine → retrieve (loop)` until verified or max attempts.
+* **Insight:** Models an **autonomous RAG refinement cycle**, achieving self-improving retrieval grounded in feedback loops.
+
+---
+
+### 16. Multi-Source Answer Synthesis (`5-RAGs/6-AnswerSynthesis.ipynb`)
+
+Implements a **multi-source retrieval + synthesis pipeline** that combines information from text documents, YouTube transcripts, Wikipedia, and Arxiv papers.
+
+* **State:** `MultiSourceRAGState` (`pydantic.BaseModel`)
+
+  * `question`, `text_docs`, `yt_docs`, `wiki_context`, `arxiv_context`, `final_answer`
+* **Retrievers:**
+
+  * Text retriever (local docs via FAISS)
+  * YouTube retriever (manual transcript embedding)
+  * Wikipedia via `WikipediaQueryRun`
+  * Arxiv using `ArxivLoader`
+* **Workflow:**
+
+  * `retrieve_text` → `retrieve_yt` → `retrieve_wiki` → `retrieve_arxiv` → `synthesize`
+* **LLM:** Groq `gemma2-9b-it`
+* **Insight:** Showcases **cross-source knowledge fusion**, building answers grounded across heterogeneous retrieval sources.
+
+---
 
   ## Broader Research Trajectory
 
