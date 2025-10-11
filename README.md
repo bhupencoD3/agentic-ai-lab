@@ -10,7 +10,6 @@
 
 ```
 1-LangGraph_Basics/
-│
 ├── 1-simple_graph.ipynb
 ├── 2-chatbot.ipynb
 ├── 3-DataClasses_StateSchema.ipynb
@@ -34,7 +33,10 @@
 ├── 3-SelfReflection.ipynb
 ├── 4-QueryPlanningdecomposition.ipynb
 ├── 5-IterativeRetrieval.ipynb
-└── 6-AnswerSynthesis.ipynb
+├── 6-AnswerSynthesis.ipynb
+├── 7-MultiAgent.ipynb
+└── 8-CorrectiveRAG.ipynb
+
 ```
 
   * `1-LangGraph_Basics/` → introductory and progressively advanced experiments with LangGraph and its integration with LangChain.
@@ -317,6 +319,75 @@ Implements a **multi-source retrieval + synthesis pipeline** that combines infor
   * `retrieve_text` → `retrieve_yt` → `retrieve_wiki` → `retrieve_arxiv` → `synthesize`
 * **LLM:** Groq `gemma2-9b-it`
 * **Insight:** Showcases **cross-source knowledge fusion**, building answers grounded across heterogeneous retrieval sources.
+
+---
+
+### 17. Multi-Agent Collaboration (`5-RAGs/7-MultiAgent.ipynb`)
+
+Explores **collaborative multi-agent systems** with specialized roles — a *Research Agent* and a *Blog Generation Agent* — coordinated through a shared message graph.
+
+* **Core Concept:**
+  Agents work *iteratively* through a supervisor, each contributing domain-specific expertise toward a shared task.
+
+* **Architecture:**
+
+  * `research_agent` → gathers and summarizes relevant context using Tavily + internal FAISS retriever.
+  * `blog_agent` → synthesizes a structured, human-like blog draft based on the research output.
+  * `supervisor_agent` → governs turn-taking between agents, ensuring convergence to “FINAL ANSWER.”
+
+* **Prompt Strategy:**
+  Each agent receives a **customized system prompt** clarifying their role, tools, and handoff behavior.
+
+* **Tools Used:**
+
+  * `TavilySearch` (live search)
+  * `FAISS retriever` built from local notes
+  * LangGraph for orchestration between agents
+
+* **Insight:**
+  Demonstrates how *multi-role collaboration* in LangGraph can emulate **hierarchical cognitive workflows**, laying groundwork for **collective intelligence agents**.
+
+---
+
+### 18. Corrective RAG (`5-RAGs/8-CorrectiveRAG.ipynb`)
+
+Implements a **hierarchical self-correcting RAG pipeline** — an autonomous agent that verifies retrieved context and dynamically rewrites its own queries if retrieval quality is low.
+
+* **Core Logic:**
+
+  1. **Retrieve** initial documents from FAISS.
+  2. **Grade** their relevance using an LLM-based binary evaluator (`GradeDocuments` schema).
+  3. If documents are irrelevant → **transform query** for better search.
+  4. **Re-retrieve** or **web search** for external context.
+  5. **Generate** a final response using the improved evidence base.
+
+* **Graph Nodes:**
+
+  * `retrieve`
+  * `grade_documents`
+  * `transform_query`
+  * `web_search_node`
+  * `generate`
+
+* **Conditional Flow:**
+  Uses `StateGraph` with conditional branching:
+
+  ```
+  grade_documents → transform_query (if poor relevance)
+  grade_documents → generate (if relevance sufficient)
+  ```
+
+* **LLMs Used:**
+  Groq `gemma2-9b-it` + structured grader model.
+
+* **Prompt Templates:**
+
+  * `grade_prompt` for assessing relevance
+  * `rewrite_prompt` for improving queries
+  * `rag_prompt` for contextual answer generation
+
+* **Insight:**
+  Corrective RAG captures **self-repair** in retrieval systems — the ability to recognize, reason about, and autonomously fix knowledge gaps.
 
 ---
 
