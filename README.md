@@ -35,9 +35,12 @@
 ├── 5-IterativeRetrieval.ipynb
 ├── 6-AnswerSynthesis.ipynb
 ├── 7-MultiAgent.ipynb
-└── 8-CorrectiveRAG.ipynb
+├── 8-CorrectiveRAG.ipynb
+├── 9-AdaptiveRAG.ipynb
+└── 10-RAGWithPersistentMemory.ipynb
 
 ```
+
 
   * `1-LangGraph_Basics/` → introductory and progressively advanced experiments with LangGraph and its integration with LangChain.
   * `2-LanggraphAdvance/` → advanced streaming and asynchronous execution examples.
@@ -388,6 +391,57 @@ Implements a **hierarchical self-correcting RAG pipeline** — an autonomous age
 
 * **Insight:**
   Corrective RAG captures **self-repair** in retrieval systems — the ability to recognize, reason about, and autonomously fix knowledge gaps.
+
+---
+
+Perfect! Let’s extend your **Notebook Summaries** to include the **two new RAG experiments** in the same style, so your Canva-ready README has all 20 notebooks fully documented.
+
+---
+
+### 19. Adaptive RAG (`5-RAGs/9-AdaptiveRAG.ipynb`)
+
+Implements an **adaptive retrieval-augmented generation workflow**, where the agent dynamically chooses retrieval strategies and models based on question type and difficulty.
+
+* **State:** `AdaptiveRAGState` (`pydantic.BaseModel`)
+
+  * `question` – input query
+  * `retrieved_docs` – documents fetched
+  * `answer` – initial answer
+  * `strategy` – retrieval strategy used
+  * `confidence` – LLM confidence score for answer
+
+* **Workflow Nodes:**
+
+  * `analyze_question` → classifies question type and decides retrieval strategy
+  * `retriever` → fetches documents dynamically from multiple sources (FAISS, Wikipedia, Arxiv)
+  * `responder` → generates answer using Groq `gemma2-9b-it` or OpenAI `GPT-4o-mini` depending on strategy
+  * `evaluator` → computes confidence; may trigger a **secondary retrieval** if below threshold
+
+* **Insight:** Demonstrates **context-aware, adaptive retrieval and reasoning**, showing how agentic systems can self-optimize based on input complexity.
+
+---
+
+### 20. RAG with Persistent Memory (`5-RAGs/10-RAGWithPersistentMemory.ipynb`)
+
+Combines **RAG workflows with persistent conversational memory**, enabling long-term reasoning across multiple sessions.
+
+* **State:** `PersistentRAGState` (`pydantic.BaseModel`)
+
+  * `conversation_history` – sequence of `BaseMessage` objects across sessions
+  * `question` – current user query
+  * `retrieved_docs` – documents fetched
+  * `answer` – generated answer
+
+* **Workflow Nodes:**
+
+  * `memory_loader` → loads previous conversation history from `MemorySaver`
+  * `retriever` → fetches documents based on both current question and historical context
+  * `responder` → generates answer grounded in retrieved docs and conversation history
+  * `memory_saver` → persists updated conversation for future interactions
+
+* **LLM Integration:** Groq `gemma2-9b-it` or OpenAI `GPT-4o-mini` for reasoning; leverages memory embeddings for context-aware retrieval
+
+* **Insight:** Shows **long-term agentic reasoning**, allowing RAG agents to maintain **contextual awareness and continuity** across multiple interactions — crucial for multi-session, human-like AI assistants.
 
 ---
 
