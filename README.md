@@ -36,9 +36,10 @@
 ├── 6-AnswerSynthesis.ipynb
 ├── 7-MultiAgent.ipynb
 ├── 8-CorrectiveRAG.ipynb
-├── 9-AdaptiveRAG.ipynb
-└── 10-RAGWithPersistentMemory.ipynb
+└── 11-CacheAugmentedGeneration.ipynb   
 
+6-Evaluation/
+└── 1-ChatbotEvaluation.ipynb            
 ```
 
 
@@ -47,6 +48,7 @@
   * `3-Debugging/` → reusable agent scripts and tool-augmented graph definitions.
   * `4-Workflows/` → practical workflows demonstrating RAG-enabled ReAct agents with multiple tools.
   * `5-RAGs/` → experiments with agentic RAG workflows using multiple retrievers and LangGraph.
+  * `6-Evaluation/` → evaluation frameworks for chatbot and RAG workflows.
   * `environment.yml` → conda environment file for reproducing the experiments.
 
   ---
@@ -442,6 +444,40 @@ Combines **RAG workflows with persistent conversational memory**, enabling long-
 * **LLM Integration:** Groq `gemma2-9b-it` or OpenAI `GPT-4o-mini` for reasoning; leverages memory embeddings for context-aware retrieval
 
 * **Insight:** Shows **long-term agentic reasoning**, allowing RAG agents to maintain **contextual awareness and continuity** across multiple interactions — crucial for multi-session, human-like AI assistants.
+
+---
+
+### 21. Cache-Augmented Generation (`5-RAGs/11-CacheAugmentedGeneration.ipynb`)
+
+Introduces **cache-based optimization** for RAG workflows by reusing past retrieval and generation outputs to minimize redundant computation.
+
+* **State:** `CacheRAGState` (`pydantic.BaseModel`)
+
+  * `question`, `cached_docs`, `new_docs`, `answer`, `used_cache`
+
+* **Workflow:**
+
+  * Checks cache before new retrieval.
+  * Merges cached and new docs for synthesis.
+  * Generates response while marking reused segments.
+
+* **Insight:** Improves efficiency in repeated or similar queries — key for scaling RAG systems with large document stores.
+
+---
+
+### 22. Chatbot Evaluation (`6-Evaluation/1-ChatbotEvaluation.ipynb`)
+
+Provides an evaluation framework for **LLM-based chatbots** and agentic systems.
+
+* **Metrics:**
+
+  * Response relevance, factuality, and conversational coherence.
+  * Automated scoring via GPT-based rubric evaluators.
+* **Workflow:**
+
+  * Uses LangSmith traces for structured logging.
+  * Aggregates evaluation results into JSON/CSV reports.
+* **Insight:** Establishes reproducible **evaluation baselines** for agentic dialogue systems.
 
 ---
 
