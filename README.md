@@ -39,7 +39,8 @@
 └── 11-CacheAugmentedGeneration.ipynb   
 
 6-Evaluation/
-└── 1-ChatbotEvaluation.ipynb            
+├── 1-ChatbotEvaluation.ipynb
+└── 2-RAGEvaluation.ipynb            
 ```
 
 
@@ -481,6 +482,35 @@ Provides an evaluation framework for **LLM-based chatbots** and agentic systems.
 
 ---
 
+### 23. RAG Evaluation (`6-Evaluation/2-RAGEvaluation.ipynb`)
+
+Implements a **comprehensive evaluation framework for RAG pipelines** using **LangSmith** and structured LLM-based grading. This notebook benchmarks retrieval-augmented generation systems across **four key metrics**.
+
+* **Objective:**  
+  Evaluate how well a RAG system retrieves, grounds, and answers questions using factual, relevant, and concise reasoning.
+
+* **Dataset Source:**  
+  Examples sourced from **Lilian Weng’s AI blog posts** on *Adversarial Attacks*, *Prompt Engineering*, and *Agents*. Each entry pairs a factual question with a reference answer.
+
+* **Evaluation Metrics:**
+
+  1. **Correctness** — Checks factual accuracy of the answer against the ground truth.  
+  2. **Relevance** — Determines if the answer is concise and focused on the question.  
+  3. **Groundedness** — Verifies if the answer is supported by retrieved documents.  
+  4. **Retrieval Relevance** — Evaluates whether the retrieved documents are relevant to the query.
+
+* **Pipeline Highlights:**
+
+  * Uses **LangChain structured output parsing** for LLM-based grading.
+  * Leverages **`ChatOpenAI(model='gpt-4o-mini')`** for deterministic evaluation.
+  * Integrates with **LangSmith datasets** to track experiments and upload examples.
+  * Wraps the **RAG bot (`rag_bot`)** for end-to-end evaluation.
+
+* **Key Insight:**  
+  Introduces a **modular evaluation harness** for RAG systems where each reasoning layer — retrieval, grounding, generation — is independently assessed. Supports reproducible AI evaluation and **structured RAG audits**.
+
+---
+
   ## Broader Research Trajectory
 
   1. **Control Flow:** deterministic vs stochastic routing.
@@ -489,16 +519,6 @@ Provides an evaluation framework for **LLM-based chatbots** and agentic systems.
   4. **Validation:** runtime enforcement via Pydantic ensures integrity of state transformations.
   5. **Agentic Workflows:** chaining LLMs and tools under a graph paradigm approximates **planning–action–evaluation cycles**.
   6. **Streaming & Async:** real-time streaming and asynchronous events enable responsive, stateful agent interactions.
-
-  ---
-
-  ## Planned Directions
-
-  * Variations of **RAG pipelines** integrated into LangGraph.
-  * Multi-agent coordination workflows.
-  * Structured evaluation using **LangSmith**.
-  * Comparative benchmarks across schema strategies.
-  * Advanced streaming and async interaction patterns for responsive agents.
 
   ---
 
